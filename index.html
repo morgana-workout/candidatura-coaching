@@ -221,9 +221,9 @@
     ]},
     { title: "Qual è il tuo obiettivo principale?", fields: [
       { type: 'chip', name: 'obiettivo_attuale', required: true, options: [
-        { label: 'Dimagrimento', value: 'definizione' },
-        { label: 'Aumento massa muscolare', value: 'massa' },
-        { label: 'Ricomposizione corporea', value: 'mantenimento' },
+        { label: 'Dimagrimento', value: 'dimagrimento' },
+        { label: 'Aumento massa muscolare', value: 'aumento_massa' },
+        { label: 'Ricomposizione corporea', value: 'ricomposizione' },
         { label: 'Programmazione', value: 'programmazione' },
         { label: 'Forza', value: 'forza' },
       ]},
@@ -512,7 +512,7 @@
   function noteCandidatura(){
     const r = [];
     const add = (e, v) => { if (v && String(v).trim()) r.push(e + ': ' + una(v)); };
-    if (!['definizione','mantenimento','massa'].includes(answers.obiettivo_attuale)) add('Obiettivo principale', labelDi('obiettivo_attuale', answers.obiettivo_attuale));
+    if (!['dimagrimento','aumento_massa','ricomposizione','programmazione','forza'].includes(answers.obiettivo_attuale)) add('Obiettivo principale', labelDi('obiettivo_attuale', answers.obiettivo_attuale));
     add('Interventi / infortuni passati', answers.interventi_infortuni);
     add('Farmaci / allergie / intolleranze', answers.farmaci_allergie);
     add('Seguita da nutrizionista', answers.nutrizionista === 'si' ? 'Sì' : (answers.nutrizionista === 'no' ? 'No' : ''));
@@ -561,7 +561,7 @@
         tipo_lavoro: answers.tipo_lavoro || null,
         livello_attivita: answers.livello_attivita || null,
         livello_allenamento: answers.livello_allenamento || null,
-        obiettivo_attuale: ['definizione','mantenimento','massa'].includes(answers.obiettivo_attuale) ? answers.obiettivo_attuale : null,
+        obiettivo_attuale: ['dimagrimento','aumento_massa','ricomposizione','programmazione','forza'].includes(answers.obiettivo_attuale) ? answers.obiettivo_attuale : null,
         tipo_servizio: answers.tipo_servizio,
         sede_abituale: answers.tipo_servizio === 'online' ? null : (answers.sede_abituale || null),
         problematiche_salute: problematiche,
