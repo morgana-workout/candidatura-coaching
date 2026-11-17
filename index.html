@@ -200,12 +200,12 @@
       { type: 'chip', name: 'sesso', required: true, options: [
         { label: 'Donna', value: 'F' }, { label: 'Uomo', value: 'M' },
       ]},
-      { type: 'number', name: 'altezza_cm', label: 'Altezza (cm)', min: 120, max: 220, required: false },
-      { type: 'number', name: 'peso_kg', label: 'Peso (kg)', min: 30, max: 200, step: 0.1, required: false },
-      { type: 'text', name: 'citta', label: 'Città', required: false },
+      { type: 'number', name: 'altezza_cm', label: 'Altezza (cm)', min: 120, max: 220, required: true },
+      { type: 'number', name: 'peso_kg', label: 'Peso (kg)', min: 30, max: 200, step: 0.1, required: true },
+      { type: 'text', name: 'citta', label: 'Città', required: true },
     ]},
     { title: "Che lavoro fai?", subtitle: "E quanto ti muovi durante la giornata", fields: [
-      { type: 'text', name: 'tipo_lavoro', label: 'Lavoro', placeholder: 'es. impiegata in ufficio', required: false },
+      { type: 'text', name: 'tipo_lavoro', label: 'Lavoro', placeholder: 'es. impiegata in ufficio', required: true },
       { type: 'chip', name: 'livello_attivita', required: true, options: [
         { label: 'Sedentaria', value: 'sedentario' },
         { label: 'Moderatamente attiva', value: 'intermedio' },
@@ -221,29 +221,31 @@
     ]},
     { title: "Qual è il tuo obiettivo principale?", fields: [
       { type: 'chip', name: 'obiettivo_attuale', required: true, options: [
-        { label: 'Perdere grasso / definizione', value: 'definizione' },
-        { label: 'Ricomposizione corporea', value: 'mantenimento' },
+        { label: 'Dimagrimento', value: 'definizione' },
         { label: 'Aumento massa muscolare', value: 'massa' },
+        { label: 'Ricomposizione corporea', value: 'mantenimento' },
+        { label: 'Programmazione', value: 'programmazione' },
+        { label: 'Forza', value: 'forza' },
       ]},
     ]},
     { title: "Hai patologie, infortuni o zone del corpo che ti creano fastidio?", subtitle: "Seleziona pure più di una", fields: [
-      { type: 'checklist', name: 'problematiche_salute', exclusiveValue: 'nessuna', options: [
+      { type: 'checklist', name: 'problematiche_salute', required: true, exclusiveValue: 'nessuna', options: [
         ...CONDIZIONI_SALUTE,
         { label: 'Altro', value: 'altro' },
         { label: 'Nessuna', value: 'nessuna' },
       ]},
-      { type: 'textarea', name: 'problematiche_salute_note', placeholder: "Dimmi di più (dove, da quanto tempo, se hai un referto medico...)", conditionalOn: { name: 'problematiche_salute', anyExcept: 'nessuna' } },
+      { type: 'textarea', name: 'problematiche_salute_note', placeholder: "Dimmi di più (dove, da quanto tempo, se hai un referto medico...)", required: true, conditionalOn: { name: 'problematiche_salute', anyExcept: 'nessuna' } },
     ]},
-    { title: "Un po' di anamnesi", subtitle: "Serve a costruire un programma sicuro per te. Facoltativo dove non hai nulla da dire", fields: [
-      { type: 'textarea', name: 'interventi_infortuni', label: 'Interventi chirurgici o infortuni passati', placeholder: "es. frattura alla caviglia nel 2022, parto cesareo...", required: false },
-      { type: 'textarea', name: 'farmaci_allergie', label: 'Farmaci, allergie o intolleranze', placeholder: "es. nessuna, oppure lattosio, pillola, integratori...", required: false },
+    { title: "Un po' di anamnesi", subtitle: "Serve a costruire un programma sicuro per te. Se non hai nulla da segnalare scrivi 'nessuno'", fields: [
+      { type: 'textarea', name: 'interventi_infortuni', label: 'Interventi chirurgici o infortuni passati', placeholder: "es. frattura alla caviglia nel 2022, oppure scrivi 'nessuno'", required: true },
+      { type: 'textarea', name: 'farmaci_allergie', label: 'Farmaci, allergie o intolleranze', placeholder: "es. lattosio, pillola, integratori, oppure scrivi 'nessuno'", required: true },
       { type: 'chip', name: 'nutrizionista', required: true, options: [
         { label: 'Sono seguita da un/una nutrizionista', value: 'si' },
         { label: 'Non sono seguita da nessuno', value: 'no' },
       ]},
     ]},
-    { title: "Su cosa vuoi lavorare di più?", subtitle: "Seleziona pure più zone, anche nessuna in particolare", fields: [
-      { type: 'checklist', name: 'focus_crescita', options: [
+    { title: "Su cosa vuoi lavorare di più?", subtitle: "Seleziona pure più zone", fields: [
+      { type: 'checklist', name: 'focus_crescita', required: true, options: [
         { label: 'Glutei', value: 'Glutei' }, { label: 'Quadricipiti', value: 'Quadricipiti' },
         { label: 'Femorali', value: 'Femorali' }, { label: 'Polpacci', value: 'Polpacci' },
         { label: 'Schiena', value: 'Schiena' }, { label: 'Petto', value: 'Petto' },
@@ -260,7 +262,7 @@
       ]},
     ]},
     { title: "Come mi hai conosciuta?", fields: [
-      { type: 'chip', name: 'come_conosciuta', required: false, options: [
+      { type: 'chip', name: 'come_conosciuta', required: true, options: [
         { label: 'Instagram', value: 'Instagram' },
         { label: 'Passaparola', value: 'Passaparola' },
         { label: 'Palestra Bulb', value: 'Palestra Bulb' },
@@ -510,6 +512,7 @@
   function noteCandidatura(){
     const r = [];
     const add = (e, v) => { if (v && String(v).trim()) r.push(e + ': ' + una(v)); };
+    if (!['definizione','mantenimento','massa'].includes(answers.obiettivo_attuale)) add('Obiettivo principale', labelDi('obiettivo_attuale', answers.obiettivo_attuale));
     add('Interventi / infortuni passati', answers.interventi_infortuni);
     add('Farmaci / allergie / intolleranze', answers.farmaci_allergie);
     add('Seguita da nutrizionista', answers.nutrizionista === 'si' ? 'Sì' : (answers.nutrizionista === 'no' ? 'No' : ''));
@@ -558,7 +561,7 @@
         tipo_lavoro: answers.tipo_lavoro || null,
         livello_attivita: answers.livello_attivita || null,
         livello_allenamento: answers.livello_allenamento || null,
-        obiettivo_attuale: answers.obiettivo_attuale || null,
+        obiettivo_attuale: ['definizione','mantenimento','massa'].includes(answers.obiettivo_attuale) ? answers.obiettivo_attuale : null,
         tipo_servizio: answers.tipo_servizio,
         sede_abituale: answers.tipo_servizio === 'online' ? null : (answers.sede_abituale || null),
         problematiche_salute: problematiche,
